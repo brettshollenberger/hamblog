@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+include Warden::Test::Helpers
+Warden.test_mode!
+
 feature "user creates a new post", %q{
   As a User
   I want to create a new Post
@@ -13,7 +16,10 @@ feature "user creates a new post", %q{
 
   let(:title) { "Awesome Post Title, DUDE" }
   let(:content) { "Superb content, this post has." }
-  let(:author) { "Yoda" }
+  let(:user) { FactoryGirl.create(:user) }
+  background do
+    login_as(user, :scope => :user)
+  end
 
   scenario "user creates a post with valid attributes" do
     visit root_path
@@ -32,7 +38,6 @@ feature "user creates a new post", %q{
 
   def fill_in_form_with_valid_attributes
     fill_in "Title", with: title
-    fill_in "Author", with: author
     fill_in "Content", with: content
   end
 end

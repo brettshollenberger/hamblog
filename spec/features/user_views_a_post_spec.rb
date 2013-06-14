@@ -17,7 +17,7 @@ feature "user views a post page", %q{
     visit root_path
     click_on post.title
     expect(page).to have_content post.title
-    expect(page).to have_content post.author
+    expect(page).to have_content post.user.username
     expect(page).to have_content post.content
   end
 end
