@@ -1,6 +1,8 @@
 <h1>Posts Archive, Yo.</h1>
 
-<%= link_to "Add Post", new_post_path %>
+<% if can? :write, :posts %>
+  <%= link_to "Add Post", new_post_path %>
+<% end %>
 
 <ul class="posts-list">
   <%- @posts.each do |post| -%>

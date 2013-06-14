@@ -21,7 +21,7 @@ feature "user creates a new post", %q{
     login_as(user, :scope => :user)
   end
 
-  scenario "user creates a post with valid attributes" do
+  scenario "author creates a post with valid attributes" do
     visit root_path
     click_on "Add Post"
     fill_in_form_with_valid_attributes
@@ -29,11 +29,32 @@ feature "user creates a new post", %q{
     expect(page).to have_content "Post created successfully!"
   end
 
-  scenario "user attempts to create a Post without valid attributes" do
+  scenario "author attempts to create a Post without valid attributes" do
     visit root_path
     click_on "Add Post"
     click_on "Create Post"
     expect(page).to have_content "You need to provide valid attributes!"
+  end
+
+  scenario "author visits new post path" do
+    visit new_post_path
+    expect(page).to have_button "Create Post"
+  end
+
+  scenario "normal user (non-author) cannot create post" do
+    logout(:user)
+    user.role = "user"
+    login_as(user, scope: :user)
+    visit root_path
+    expect(page).to_not have_content "Add Post"
+  end
+
+  scenario "non-author visits new post path" do
+    logout(:user)
+    user.role = "user"
+    login_as(user, scope: :user)
+    visit new_post_path
+    expect(page).to_not have_button "Create Post"
   end
 
   def fill_in_form_with_valid_attributes
